@@ -5,10 +5,7 @@ import Card from '../Components/Card'
 import HOC from '../Components/HOC'
 import { deleteFile } from '../firebase/fireStorage'
 
-const userToken = localStorage.getItem("user_token")
-
-
-function ShopDetail({ malls, updateMallData }) {
+function ShopDetail({ malls, updateMallData, user_token }) {
     const { id, shop_name } = useParams()
     const history = useHistory()
     const [data, setData] = useState({})
@@ -56,7 +53,7 @@ function ShopDetail({ malls, updateMallData }) {
                 </Grid>
 
                 <Grid container spacing={2} style={{ margin: "auto", width: "90%" }}>
-                    {userToken && <Grid item sm={12}>
+                    {user_token && <Grid item sm={12}>
                         <Button
                             onClick={() => history.push('/' + id + '/shop/' + shop_name + '/editShop')}
                             variant="contained"

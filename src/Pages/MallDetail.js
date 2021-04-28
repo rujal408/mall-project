@@ -6,9 +6,8 @@ import Card from '../Components/Card'
 import HOC from '../Components/HOC'
 import { deleteShop } from '../utils/deleteShop'
 
-const userToken = localStorage.getItem("user_token")
 
-function MallDetail({ malls, updateMallData }) {
+function MallDetail({ malls, updateMallData, user_token }) {
     const { id } = useParams()
     const history = useHistory()
     const [detail, setDetail] = React.useState({ id: '', mall_name: '', mall_address: '', shops: [] })
@@ -46,7 +45,7 @@ function MallDetail({ malls, updateMallData }) {
                 </Grid>
 
                 <Grid container spacing={2} style={{ margin: "auto", width: "90%" }}>
-                    {userToken && <>
+                    {user_token && <>
                         <Grid item sm={3}>
                             <Button
                                 onClick={() => history.push('/' + detail.id + '/addShop')}

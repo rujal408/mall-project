@@ -1,18 +1,16 @@
 import { Button, Grid, TextField } from '@material-ui/core'
 import React from 'react'
-import { useHistory } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import Malls from '../Components/Mall/Malls'
 import Shops from '../Components/Shop/Shops'
 import { shuffle } from '../utils/Shuffle'
 import HOC from '../Components/HOC'
-
-
+import Nav from '../Components/Nav'
 
 function Dashboard({ malls, updateMallData, deleteMallData, user_token }) {
 
-    console.log(user_token);
-
     const history = useHistory()
+    const location = useLocation()
     const [mallData, setMall] = React.useState([])
 
     React.useEffect(() => {
@@ -36,6 +34,8 @@ function Dashboard({ malls, updateMallData, deleteMallData, user_token }) {
     }
 
     return (
+        <>
+        {location.pathname.includes('dashboard') && <Nav />}
         <Grid container spacing={2}
             style={{ width: "90%", margin: "auto" }}
         >
@@ -64,6 +64,7 @@ function Dashboard({ malls, updateMallData, deleteMallData, user_token }) {
                 <Shops shops={shops} malls={mallData} updateMallData={updateMallData} />
             </Grid>
         </Grid >
+        </>
     )
 }
 

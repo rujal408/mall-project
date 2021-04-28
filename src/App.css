@@ -86,3 +86,21 @@
     cursor: pointer;
     z-index: 999;
   }
+
+  .nav-main{
+      border-bottom: 1px solid grey;
+      width:100%;
+  }
+
+  .nav-inside{
+      width:90%;
+      margin:auto;
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+
+  .item{
+      padding:14px;
+      margin:14px;
+  }

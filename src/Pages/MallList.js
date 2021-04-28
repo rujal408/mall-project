@@ -5,10 +5,9 @@ import { paginate, Pagination } from '../utils/Paginate'
 import Card from '../Components/Card'
 import HOC from '../Components/HOC'
 
-const userToken = localStorage.getItem("user_token")
 
 
-function MallList({ malls, deleteMallData }) {
+function MallList({ malls, deleteMallData, user_token }) {
     
     const history = useHistory()
     const [search, setSearch] = React.useState('')
@@ -42,7 +41,7 @@ function MallList({ malls, deleteMallData }) {
 
             <Grid container spacing={2}>
                 <Grid item sm={12}>
-                    {userToken && <Grid item sm={12}>
+                    {user_token && <Grid item sm={12}>
                         <Button
                             variant="contained"
                             color="secondary"

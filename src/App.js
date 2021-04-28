@@ -15,11 +15,11 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route exact path="/" component={Dashboard} />
         <Route path="/login" render={props => !localStorage.getItem("user_token") ?
           <Login {...props} />
           :
           <Redirect to={{ pathname: "/dashboard", state: { from: props.location } }} />} />
+        <Route exact path="/" component={Dashboard} />
         <ProtectedRoute path="/dashboard" component={Dashboard} />
         <ProtectedRoute path="/addMall" component={MallForm} />
         <ProtectedRoute path="/malls" component={MallList} />
