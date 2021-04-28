@@ -1,6 +1,6 @@
-import { Grid, Typography, Button } from '@material-ui/core'
+import { Grid, Typography, Button, Fab } from '@material-ui/core'
+import { Add } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
 import HOC from '../Components/HOC'
 import ShopForm from '../Components/Shop/ShopForm'
 import { deleteFile, getFileUrl } from '../firebase/fireStorage'
@@ -9,9 +9,9 @@ const defaultData = {
     shops: [{ shop_name: "", shop_description: "", images: [] }]
 }
 
-function ShopOnly({ malls, editMode, updateMallData, setEditMode }) {
+function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
 
-    const { id, shop_name } = useParams()
+    const { id, shop_name } = match.params
     const [data, setData] = useState(defaultData)
     const [loading, setLoading] = useState(false)
 
@@ -28,7 +28,7 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode }) {
     const handleSubmit = async (e) => {
         e.preventDefault()
         setLoading(true)
-        
+
         const specificMall = malls.find(mall => mall.id === id)
 
         let finalData = {}
@@ -46,7 +46,7 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode }) {
             shopData['images'] = stateImage
 
             finalData = {
-                ...specificMall,
+
                 shops: specificMall.shops.map(shop => shop.shop_name === shop_name ? shopData : shop)
             }
 
@@ -57,7 +57,6 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode }) {
                 return { ...shop, images }
             }))
             finalData = {
-                ...specificMall,
                 shops: [...specificMall.shops, ...shopData]
             }
             setData(defaultData)
@@ -81,7 +80,20 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode }) {
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={2} style={{ margin: "auto", width: "40%" }}>
                         <Grid item sm={12}>
-                            <ShopForm setData={setData} data={data.shops[0]} />
+                            {data.shops.map((shop, i) => (
+                                <ShopForm key={i} setData={setData} data={shop} index={i} />
+                            ))}
+                           {!editMode && <Typography variant="h5" color="secondary">
+                                <Fab
+                                    color="secondary"
+                                    style={{ height: 44, width: 44, margin: 12 }}>
+                                    <Add
+                                        onClick={() => setData({ ...data, shops: [...data.shops, defaultData.shops[0]] })}
+                                    />
+                                </Fab>
+                            </Typography>}
+                        </Grid>
+                        <Grid item sm={12}>
                             <Button
                                 disabled={loading}
                                 variant="contained"

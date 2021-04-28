@@ -4,7 +4,7 @@ import { getMallData, deleteMallData, updateMallData } from '../redux/actions/ma
 import { EDIT_MALL } from '../redux/actionType'
 
 const HOC = (OriginalComponent) => {
-    function ComponentUpdated() {
+    function ComponentUpdated(props) {
 
         const dispatch = useDispatch()
         const malls = useSelector(state => state.mallReducer.malls)
@@ -17,6 +17,7 @@ const HOC = (OriginalComponent) => {
 
 
         return <OriginalComponent
+            {...props}
             user_token={user_token}
             malls={malls}
             editMode={editMode}

@@ -8,7 +8,6 @@ export const deleteShop = async (malls, mallId, shopName) => {
     )))
 
     const data = {
-        ...rest,
         shops: rest.shops.filter(x => x.shop_name !== shopName)
     }
 

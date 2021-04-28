@@ -1,14 +1,14 @@
 import React from 'react'
 import { Typography, Grid, Button } from '@material-ui/core'
-import { useHistory, useParams } from 'react-router'
+import { useHistory } from 'react-router'
 import { paginate, Pagination } from '../utils/Paginate'
 import Card from '../Components/Card'
 import HOC from '../Components/HOC'
 import { deleteShop } from '../utils/deleteShop'
 
 
-function MallDetail({ malls, updateMallData, user_token }) {
-    const { id } = useParams()
+function MallDetail({ malls, updateMallData, user_token, match }) {
+    const { id } = match.params
     const history = useHistory()
     const [detail, setDetail] = React.useState({ id: '', mall_name: '', mall_address: '', shops: [] })
     const [currentPage, setPage] = React.useState(1)
