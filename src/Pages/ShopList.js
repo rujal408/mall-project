@@ -6,7 +6,7 @@ import HOC from '../Components/HOC'
 import { paginate, Pagination } from '../utils/Paginate'
 import { deleteShop } from '../utils/deleteShop'
 
-function ShopList({ malls, updateMallData }) {
+function ShopList({ malls, updateMallData, match }) {
 
     const [search, setSearch] = React.useState('')
     const [currentPage, setPage] = React.useState(1)
@@ -33,6 +33,7 @@ function ShopList({ malls, updateMallData }) {
         :
         x.shop_name.toLowerCase().includes(search.toLowerCase()))
 
+    const adminMode = !match.path.includes("user")
 
     return (
 
@@ -61,6 +62,7 @@ function ShopList({ malls, updateMallData }) {
                                     description={shop.mall_name}
                                     handleClick={() => history.push('/' + shop.id + '/shop/' + shop.shop_id)}
                                     crossClick={() => handleShopDelete(shop.id, shop.shop_id)}
+                                    adminMode={adminMode}
                                 />
                             </Grid>
                         ))

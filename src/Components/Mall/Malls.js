@@ -4,9 +4,16 @@ import { Link, useHistory } from 'react-router-dom'
 import Card from '../Card'
 import { shuffle } from '../../utils/Shuffle'
 
-function Malls({ malls, deleteMallData }) {
+function Malls({ malls, deleteMallData,adminMode}) {
     const history = useHistory()
 
+    const locationChange = (id) => {
+        if (!adminMode) {
+            history.push('/' + id + '/user')
+        } else {
+            history.push('/' + id)
+        }
+    }
     return (
         <Grid>
             <Typography variant="h4" color="secondary">Malls</Typography>
@@ -18,10 +25,10 @@ function Malls({ malls, deleteMallData }) {
                             <Card
                                 name={mall.mall_name}
                                 description={mall.mall_address}
-                                handleClick={() => history.push('/' + mall.id)}
+                                handleClick={() => locationChange(mall.id)}
                                 url={mall.mall_image.url}
                                 crossClick={() => deleteMallData(mall)}
-
+                                adminMode={adminMode}
                             />
                         </Grid>
                     ))
@@ -29,7 +36,7 @@ function Malls({ malls, deleteMallData }) {
 
 
             </Grid>
-            {malls.length > 2 && <Link to="/malls" className="link">View All</Link>}
+            {malls.length > 2 && <Link to={!adminMode ? "/malls/user" : "/malls"} className="link">View All</Link>}
         </Grid>
     )
 }

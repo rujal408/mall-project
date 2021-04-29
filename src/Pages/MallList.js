@@ -5,9 +5,7 @@ import { paginate, Pagination } from '../utils/Paginate'
 import Card from '../Components/Card'
 import HOC from '../Components/HOC'
 
-
-
-function MallList({ malls, deleteMallData, user_token }) {
+function MallList({ malls, deleteMallData, match }) {
     
     const history = useHistory()
     const [search, setSearch] = React.useState('')
@@ -25,6 +23,17 @@ function MallList({ malls, deleteMallData, user_token }) {
     const filteredMalls = malls.filter(x => search === "" ? x
         :
         x.mall_name.toLowerCase().includes(search.toLowerCase()))
+    
+
+    const adminMode = !match.path.includes("user")
+
+    const locationChange = (id) => {
+        if (!adminMode) {
+            history.push('/' + id + '/user')
+        } else {
+            history.push('/' + id)
+        }
+    }
 
     return (
 
@@ -41,7 +50,7 @@ function MallList({ malls, deleteMallData, user_token }) {
 
             <Grid container spacing={2}>
                 <Grid item sm={12}>
-                    {user_token && <Grid item sm={12}>
+                    {adminMode && <Grid item sm={12}>
                         <Button
                             variant="contained"
                             color="secondary"
@@ -61,11 +70,11 @@ function MallList({ malls, deleteMallData, user_token }) {
                                 <Card
                                     name={mall.mall_name}
                                     description={mall.mall_address}
-                                    handleClick={() => history.push('/' + mall.id)}
+                                    handleClick={() => locationChange(mall.id)}
                                     url={mall.mall_image.url}
                                     crossClick={() => deleteMallData(mall)}
+                                    adminMode={adminMode}
                                 />
-
                             </Grid>
                         ))
                 }

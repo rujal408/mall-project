@@ -1,8 +1,12 @@
 import React from 'react'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux';
+import { SWITCH_USER } from '../redux/actionType';
 
 function Nav() {
+
+    const dispatch = useDispatch()
 
     return (
 
@@ -16,7 +20,12 @@ function Nav() {
                         <Link style={{ textDecoration: "none" }} to="/login" onClick={() => localStorage.clear()}>Logout</Link>
                     </div>
                     <div className="item">
-                        <Link style={{ textDecoration: "none" }} to="/">Switch to user</Link>
+                        <Link
+                            style={{ textDecoration: "none" }}
+                            to="/"
+                            onClick={() => dispatch({ type: SWITCH_USER, payload:"user" })}>
+                            Switch to user
+                            </Link>
                     </div>
                 </div>
             </div>

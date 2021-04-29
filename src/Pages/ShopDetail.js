@@ -1,15 +1,14 @@
 import React, { useState } from 'react'
 import { Typography, Grid, Button } from '@material-ui/core'
-import { useHistory, useParams } from 'react-router'
+import { useHistory } from 'react-router'
 import Card from '../Components/Card'
 import HOC from '../Components/HOC'
 import { deleteFile } from '../firebase/fireStorage'
 
-function ShopDetail({ malls, updateMallData, user_token }) {
-    const { id, shop_id } = useParams()
+function ShopDetail({ malls, updateMallData, match }) {
+    const { id, shop_id } = match.params
     const history = useHistory()
     const [data, setData] = useState({})
-
 
     React.useEffect(() => {
         if (id && shop_id) {
@@ -38,6 +37,8 @@ function ShopDetail({ malls, updateMallData, user_token }) {
 
     const detail = data?.shops?.find(x => x.shop_id === shop_id)
 
+    const adminMode = !match.path.includes("user")
+
     return (
         <Grid>
             <Grid container spacing={2}>
@@ -53,7 +54,7 @@ function ShopDetail({ malls, updateMallData, user_token }) {
                 </Grid>
 
                 <Grid container spacing={2} style={{ margin: "auto", width: "90%" }}>
-                    {user_token && <Grid item sm={12}>
+                    {adminMode && <Grid item sm={12}>
                         <Button
                             onClick={() => history.push('/' + id + '/shop/' + shop_id + '/editShop')}
                             variant="contained"
@@ -62,7 +63,7 @@ function ShopDetail({ malls, updateMallData, user_token }) {
                     <Grid item sm={12}>
                         <Grid container spacing={2}>
                             <Grid item sm={12}>
-                                <Typography variant="h4" color="primary">Shops</Typography>
+                                <Typography variant="h4" color="primary">Images</Typography>
                             </Grid>
                             {
                                 detail?.images
@@ -72,6 +73,7 @@ function ShopDetail({ malls, updateMallData, user_token }) {
                                                 name={image.image_name}
                                                 url={image.url}
                                                 crossClick={() => deleteImage(image.id)}
+                                                adminMode={adminMode}
                                             />
                                         </Grid>
                                     ))

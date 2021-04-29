@@ -7,7 +7,7 @@ import HOC from '../Components/HOC'
 import { deleteShop } from '../utils/deleteShop'
 
 
-function MallDetail({ malls, updateMallData, user_token, match }) {
+function MallDetail({ malls, updateMallData, match }) {
     const { id } = match.params
     const history = useHistory()
     const [detail, setDetail] = React.useState({ id: '', mall_name: '', mall_address: '', shops: [] })
@@ -30,6 +30,16 @@ function MallDetail({ malls, updateMallData, user_token, match }) {
         }
     }
 
+    const adminMode = !match.path.includes("user")
+
+    const locationChange=(shopId)=>{
+        if(!adminMode){
+            history.push(`/${id}/shop/${shopId}/user`)
+        }else{
+            history.push(`/${id}/shop/${shopId}`)
+        }
+    }
+
     return (
         <Grid>
             <Grid container spacing={2}>
@@ -45,7 +55,7 @@ function MallDetail({ malls, updateMallData, user_token, match }) {
                 </Grid>
 
                 <Grid container spacing={2} style={{ margin: "auto", width: "90%" }}>
-                    {user_token && <>
+                    {adminMode && <>
                         <Grid item sm={3}>
                             <Button
                                 onClick={() => history.push('/' + detail.id + '/addShop')}
@@ -72,8 +82,9 @@ function MallDetail({ malls, updateMallData, user_token, match }) {
                                                 name={shop.shop_name}
                                                 description={detail.mall_name}
                                                 url={shop.images[0].url}
-                                                handleClick={() => history.push(`/${id}/shop/${shop.shop_id}`)}
+                                                handleClick={()=>locationChange(shop.shop_id)}
                                                 crossClick={() => handleShopDelete(shop.shop_id)}
+                                                adminMode={adminMode}
                                             />
                                         </Grid>
                                     ))
