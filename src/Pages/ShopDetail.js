@@ -6,20 +6,20 @@ import HOC from '../Components/HOC'
 import { deleteFile } from '../firebase/fireStorage'
 
 function ShopDetail({ malls, updateMallData, user_token }) {
-    const { id, shop_name } = useParams()
+    const { id, shop_id } = useParams()
     const history = useHistory()
     const [data, setData] = useState({})
 
 
     React.useEffect(() => {
-        if (id && shop_name) {
+        if (id && shop_id) {
             const mall = malls.find(x => x.id === id)
             if (mall) {
                 const { id, ...rest } = mall
                 setData(rest)
             }
         }
-    }, [shop_name, malls, id])
+    }, [shop_id, malls, id])
 
     const deleteImage = async (imageId) => {
 
@@ -28,7 +28,7 @@ function ShopDetail({ malls, updateMallData, user_token }) {
         const mall = malls.find(mall => mall.id === id)
         const data = {
             ...mall,
-            shops: mall.shops.map(shop => shop.shop_name === shop_name ?
+            shops: mall.shops.map(shop => shop.shop_id === shop_id ?
                 { ...shop, images: shop.images.filter(img => img.id !== imageId) }
                 : shop
             )
@@ -36,7 +36,7 @@ function ShopDetail({ malls, updateMallData, user_token }) {
         updateMallData(id, data)
     }
 
-    const detail = data?.shops?.find(x => x.shop_name === shop_name)
+    const detail = data?.shops?.find(x => x.shop_id === shop_id)
 
     return (
         <Grid>
@@ -55,7 +55,7 @@ function ShopDetail({ malls, updateMallData, user_token }) {
                 <Grid container spacing={2} style={{ margin: "auto", width: "90%" }}>
                     {user_token && <Grid item sm={12}>
                         <Button
-                            onClick={() => history.push('/' + id + '/shop/' + shop_name + '/editShop')}
+                            onClick={() => history.push('/' + id + '/shop/' + shop_id + '/editShop')}
                             variant="contained"
                             color="secondary">Edit Shop</Button>
                     </Grid>}

@@ -23,8 +23,8 @@ function MallDetail({ malls, updateMallData, user_token, match }) {
 
     const runPaginate = async (number) => setPage(number)
 
-    const handleShopDelete = async (shopName) => {
-        const data = await deleteShop(malls, id, shopName)
+    const handleShopDelete = async (shop_id) => {
+        const data = await deleteShop(malls, id, shop_id)
         if (data) {
             updateMallData(id, data)
         }
@@ -67,13 +67,13 @@ function MallDetail({ malls, updateMallData, user_token, match }) {
                             {
                                 paginate(detail.shops, postPerPage, currentPage)
                                     .map(shop => (
-                                        <Grid item sm={4} xs={12} key={shop.shop_name}>
+                                        <Grid item sm={4} xs={12} key={shop.shop_id}>
                                             <Card
                                                 name={shop.shop_name}
                                                 description={detail.mall_name}
                                                 url={shop.images[0].url}
-                                                handleClick={() => history.push(`/${id}/shop/${shop.shop_name}`)}
-                                                crossClick={() => handleShopDelete(shop.shop_name)}
+                                                handleClick={() => history.push(`/${id}/shop/${shop.shop_id}`)}
+                                                crossClick={() => handleShopDelete(shop.shop_id)}
                                             />
                                         </Grid>
                                     ))

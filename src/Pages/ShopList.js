@@ -54,13 +54,13 @@ function ShopList({ malls, updateMallData }) {
                 {
                     paginate(filteredShops, postPerPage, currentPage)
                         .map(shop => (
-                            <Grid item sm={4} xs={12} key={shop.shop_name}>
+                            <Grid item sm={4} xs={12} key={shop.shop_id}>
                                 <Card
                                     name={shop.shop_name}
                                     url={shop.images[0].url}
                                     description={shop.mall_name}
-                                    handleClick={() => history.push('/' + shop.id + '/shop/' + shop.shop_name)}
-                                    crossClick={() => handleShopDelete(shop.id, shop.shop_name)}
+                                    handleClick={() => history.push('/' + shop.id + '/shop/' + shop.shop_id)}
+                                    crossClick={() => handleShopDelete(shop.id, shop.shop_id)}
                                 />
                             </Grid>
                         ))

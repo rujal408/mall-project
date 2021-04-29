@@ -13,7 +13,7 @@ const defaultData = {
     mall_name: "",
     mall_address: "",
     mall_image: null,
-    shops: [{ shop_name: "", shop_description: "", images: [] }]
+    shops: [{ shop_id: "" + Math.floor(Math.random() * Date.now()), shop_name: "", shop_description: "", images: [] }]
 }
 
 function MallForm() {
@@ -62,7 +62,7 @@ function MallForm() {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-       
+
         setLoading(true)
 
         if (editMode) {
@@ -98,7 +98,12 @@ function MallForm() {
                 ...data, mall_image: mall_image[0], shops
             }
             dispatch(addMallData(datas))
-            setData(defaultData)
+            setData({
+                mall_name: "",
+                mall_address: "",
+                mall_image: null,
+                shops: [{ shop_id: "" + Math.floor(Math.random() * Date.now()), shop_name: "", shop_description: "", images: [] }]
+            })
             setImageUrl('')
         }
         setLoading(false)
@@ -165,7 +170,11 @@ function MallForm() {
                                 color="secondary"
                                 style={{ height: 44, width: 44, margin: 12 }}>
                                 <Add
-                                    onClick={() => setData({ ...data, shops: [...data.shops, defaultData.shops[0]] })}
+                                    onClick={() => setData({
+                                        ...data,
+                                        shops: [...data.shops,
+                                        { shop_id: "" + Math.floor(Math.random() * Date.now()), shop_name: "", shop_description: "", images: [] }]
+                                    })}
                                 />
                             </Fab>
                         </Typography>

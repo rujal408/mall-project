@@ -6,24 +6,24 @@ import ShopForm from '../Components/Shop/ShopForm'
 import { deleteFile, getFileUrl } from '../firebase/fireStorage'
 
 const defaultData = {
-    shops: [{ shop_name: "", shop_description: "", images: [] }]
+    shops: [{ shop_id: "" + Math.floor(Math.random() * Date.now()), shop_name: "", shop_description: "", images: [] }]
 }
 
 function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
 
-    const { id, shop_name } = match.params
+    const { id, shop_id } = match.params
     const [data, setData] = useState(defaultData)
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        if (id && shop_name) {
+        if (id && shop_id) {
             setEditMode()
-            const shop = malls.find(x => x.id === id)?.shops.find(y => y.shop_name === shop_name)
+            const shop = malls.find(x => x.id === id)?.shops.find(y => y.shop_id === shop_id)
             if (shop) {
                 setData({ shops: [shop] })
             }
         }
-    }, [id, malls, shop_name, setEditMode])
+    }, [id, malls, shop_id, setEditMode])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -39,7 +39,7 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
             const stateImage = await getFileUrl(shopData.images)
             const imagesId = stateImage.map(x => x.id)
             //Reducer Image
-            const reducerImages = specificMall.shops.find(x => x.shop_name === shop_name).images
+            const reducerImages = specificMall.shops.find(x => x.shop_id === shop_id).images
             await Promise.all(reducerImages.map(async im => (
                 !imagesId.includes(im.id) && await deleteFile(im.id)
             )))
@@ -47,7 +47,7 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
 
             finalData = {
 
-                shops: specificMall.shops.map(shop => shop.shop_name === shop_name ? shopData : shop)
+                shops: specificMall.shops.map(shop => shop.shop_id === shop_id ? shopData : shop)
             }
 
         } else {
@@ -59,7 +59,12 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
             finalData = {
                 shops: [...specificMall.shops, ...shopData]
             }
-            setData(defaultData)
+            setData({
+                shops: [{
+                    shop_id: "" + Math.floor(Math.random() * Date.now()),
+                    shop_name: "", shop_description: "", images: []
+                }]
+            })
         }
 
         delete finalData.id
@@ -83,12 +88,15 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
                             {data.shops.map((shop, i) => (
                                 <ShopForm key={i} setData={setData} data={shop} index={i} />
                             ))}
-                           {!editMode && <Typography variant="h5" color="secondary">
+                            {!editMode && <Typography variant="h5" color="secondary">
                                 <Fab
                                     color="secondary"
                                     style={{ height: 44, width: 44, margin: 12 }}>
                                     <Add
-                                        onClick={() => setData({ ...data, shops: [...data.shops, defaultData.shops[0]] })}
+                                        onClick={() => setData({
+                                            ...data,
+                                            shops: [...data.shops, { shop_id: "" + Math.floor(Math.random() * Date.now()), shop_name: "", shop_description: "", images: [] }]
+                                        })}
                                     />
                                 </Fab>
                             </Typography>}
