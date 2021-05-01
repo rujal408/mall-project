@@ -4,14 +4,30 @@ import React, { useEffect, useState } from 'react'
 import HOC from '../Components/HOC'
 import ShopForm from '../Components/Shop/ShopForm'
 import { deleteFile, getFileUrl } from '../firebase/fireStorage'
+import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
+import { useHistory } from 'react-router'
 
 const defaultData = {
-    shops: [{ shop_id: "" + Math.floor(Math.random() * Date.now()), shop_name: "", shop_description: "", images: [] }]
+    shops: [{ shop_id: "" + Math.floor(Math.random() * Date.now()), images: [] }]
 }
 
 function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
 
+    const methods = useForm({
+        defaultValues: {
+            shops: [{ shop_name: "", shop_description: "" }]
+        }
+    })
+
+    const { handleSubmit, control, reset } = methods
+
+    const { fields, append } = useFieldArray({
+        control,
+        name: "shops"
+    })
+
     const { id, shop_id } = match.params
+    const history = useHistory()
     const [data, setData] = useState(defaultData)
     const [loading, setLoading] = useState(false)
 
@@ -20,14 +36,21 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
             setEditMode()
             const shop = malls.find(x => x.id === id)?.shops.find(y => y.shop_id === shop_id)
             if (shop) {
-                setData({ shops: [shop] })
+                const { shop_id, shop_name, shop_description, images } = shop
+                reset({
+                    shops: [{ shop_name, shop_description }]
+                })
+                setData({ shops: [{ shop_id, images }] })
             }
         }
-    }, [id, malls, shop_id, setEditMode])
+    }, [id, malls, shop_id, setEditMode, reset])
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
+    const onSubmit = async (datas) => {
         setLoading(true)
+
+        const mainData = {
+            shops: data.shops.map((shop, i) => ({ ...shop, ...datas.shops[i] }))
+        }
 
         const specificMall = malls.find(mall => mall.id === id)
 
@@ -35,7 +58,7 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
 
         if (editMode) {
             //state image
-            let shopData = data.shops[0]
+            let shopData = mainData.shops[0]
             const stateImage = await getFileUrl(shopData.images)
             const imagesId = stateImage.map(x => x.id)
             //Reducer Image
@@ -52,26 +75,29 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
 
         } else {
 
-            const shopData = await Promise.all(data.shops.map(async shop => {
+            const shopData = await Promise.all(mainData.shops.map(async shop => {
                 const images = await getFileUrl(shop.images)
                 return { ...shop, images }
             }))
             finalData = {
                 shops: [...specificMall.shops, ...shopData]
             }
-            setData({
-                shops: [{
-                    shop_id: "" + Math.floor(Math.random() * Date.now()),
-                    shop_name: "", shop_description: "", images: []
-                }]
-            })
         }
-
-        delete finalData.id
 
         updateMallData(id, finalData)
         setLoading(false)
+        history.push(`/${id}/shop/${shop_id}`)
 
+    }
+
+    const addField = () => {
+        append({
+            shop_name: "",
+            shop_description: ""
+        })
+        setData(da => ({
+            shops: [...da.shops, { shop_id: "" + Math.floor(Math.random() * Date.now()), images: [] }]
+        }))
     }
 
     return (
@@ -82,34 +108,41 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
                 </Typography>
             </Grid>
             <Grid item sm={12}>
-                <form onSubmit={handleSubmit}>
-                    <Grid container spacing={2} style={{ margin: "auto", width: "40%" }}>
-                        <Grid item sm={12}>
-                            {data.shops.map((shop, i) => (
-                                <ShopForm key={i} setData={setData} data={shop} index={i} />
-                            ))}
-                            {!editMode && <Typography variant="h5" color="secondary">
-                                <Fab
+                <FormProvider {...methods}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <Grid container spacing={2} style={{ margin: "auto", width: "40%" }}>
+                            <Grid item sm={12}>
+                                {
+                                    fields.map((field, i) => (
+                                        <div key={field.id}>
+                                            <ShopForm
+                                                setData={setData}
+                                                index={i}
+                                                data={data.shops[i]}
+                                            />
+                                        </div>
+                                    ))
+                                }
+                                {!editMode && <Typography variant="h5" color="secondary">
+                                        <Fab
+                                            color="secondary"
+                                            style={{ height: 44, width: 44, margin: 12 }}>
+                                            <Add
+                                                onClick={addField}
+                                            />
+                                        </Fab>
+                                </Typography>}
+                            </Grid>
+                            <Grid item sm={12}>
+                                <Button
+                                    disabled={loading}
+                                    variant="contained"
                                     color="secondary"
-                                    style={{ height: 44, width: 44, margin: 12 }}>
-                                    <Add
-                                        onClick={() => setData({
-                                            ...data,
-                                            shops: [...data.shops, { shop_id: "" + Math.floor(Math.random() * Date.now()), shop_name: "", shop_description: "", images: [] }]
-                                        })}
-                                    />
-                                </Fab>
-                            </Typography>}
+                                    type="submit">Submit{loading && "ting"}</Button>
+                            </Grid>
                         </Grid>
-                        <Grid item sm={12}>
-                            <Button
-                                disabled={loading}
-                                variant="contained"
-                                color="secondary"
-                                type="submit">Submit{loading && "ting"}</Button>
-                        </Grid>
-                    </Grid>
-                </form>
+                    </form>
+                </FormProvider>
             </Grid>
         </Grid>
     )
