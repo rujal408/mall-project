@@ -18,3 +18,59 @@ code {
   margin-top: 10px;
   text-decoration: none;
 }
+
+.alert-success{
+    display: block;
+    background: #28b5b5;
+    padding: 12px 18px;
+    max-width: 300px;
+    margin: 0 auto;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin-bottom: 20px;
+    box-shadow: rgba(0, 0, 0, 1.5) 1px 1px 2px 0.5px;
+    position: absolute;
+    float: right;
+    right:10px;
+    top:10px;
+    animation: slide 0.4s ease-in-out;
+}
+
+.alert-error{
+  display: block;
+  background: #ca111a;
+  padding: 12px 18px;
+  max-width: 300px;
+  margin: 0 auto;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  box-shadow: rgba(0, 0, 0, 1.5) 1px 1px 2px 0.5px;
+  position: absolute;
+  float: right;
+  top:10px;
+}
+
+.animate{
+  right:10px;
+  animation: slide 0.4s ease-in-out;
+}
+
+.non-animate{
+  right:-300px;
+  animation: unslide 0.4s ease-in-out;
+}
+
+@keyframes unslide{
+  0%{right:10px;}
+  50%{right:0px;}
+  100%{right:-300px;}
+}
+
+@keyframes slide{
+  0%{right:-300px;}
+  50%{right:0px;}
+  100%{right:10px;}
+}

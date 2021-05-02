@@ -72,7 +72,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         login: data => dispatch(login(data)),
-        setToken:(payload)=>dispatch({type:LOGIN_SUCCESS, payload})
+        setToken: (payload) => dispatch({ type: LOGIN_SUCCESS, payload })
     }
 }
 

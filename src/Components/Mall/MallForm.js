@@ -92,7 +92,7 @@ function MallForm() {
 
 
     const submitData = async (datas) => {
-
+      
         const finalData = {
             ...datas,
             mall_image: data.mall_image,

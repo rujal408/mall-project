@@ -1,6 +1,7 @@
 import { firebaseDatabase } from '../../firebase/config'
 import { deleteFile } from '../../firebase/fireStorage'
 import * as actionType from '../actionType'
+import { setAlert } from './notification'
 
 export const addMallData = (data) => dispatch => {
     dispatch({ type: actionType.ADD_MALL_REQUEST })
@@ -53,6 +54,7 @@ export const deleteMallData = (data) => dispatch => {
                 deleteFile(image.id)
             })
         })
+        dispatch(setAlert("success", "Mall has been deleted successfully"))
         dispatch({ type: actionType.DELETE_MALL_SUCCESS, payload: data.id })
 
     })

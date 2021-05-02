@@ -24,3 +24,5 @@ export const EDIT_MALL = "EDIT_MALL"
 export const SEARCH_MALL="SEARCH_MALL"
 
 export const SWITCH_USER="SWITCH_USER"
+export const SET_ALERT = "SET_ALERT"
+export const REMOVE_ALERT="REMOVE_ALERT"

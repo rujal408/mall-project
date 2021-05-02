@@ -10,9 +10,12 @@ import ShopList from './Pages/ShopList';
 import MallDetail from './Pages/MallDetail'
 import ShopDetail from './Pages/ShopDetail'
 import ShopOnly from './Pages/ShopOnly';
+import Notification from './Components/Notification';
 
 function App() {
   return (
+    <>
+    <Notification />
     <Router>
       <Switch>
 
@@ -39,9 +42,9 @@ function App() {
         <ProtectedRoute path="/:id/addShop" component={ShopOnly} />
         <ProtectedRoute exact path="/:id/shop/:shop_id/editShop" component={ShopOnly} />
 
-
       </Switch>
     </Router>
+    </>
   );
 }
 
