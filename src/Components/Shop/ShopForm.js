@@ -4,9 +4,11 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import UploadFile from '../UploadFile';
 import { useFormContext, Controller } from 'react-hook-form'
 
+const imageFormat = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
+
 function ShopForm({ data, setData, index }) {
 
-    const { formState: { errors }, control, getValues } = useFormContext()
+    const { formState: { errors }, control, getValues, clearErrors } = useFormContext()
 
     const removeFile = async (id) => {
 
@@ -34,6 +36,30 @@ function ShopForm({ data, setData, index }) {
             return errors.shops[index][name].message
         } else {
             return false
+        }
+    }
+
+    const shopImageValidation = () => {
+
+        if (data.images.length === 0) {
+            return "Please Provide Shop Image"
+        } else {
+            if (data.images.every(im => {
+                if (im.hasOwnProperty("url")) {
+                    return true
+                } else {
+                    if (imageFormat.includes(im.file.type)) {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            })) {
+                clearErrors(`shops[${index}].images`)
+                return true
+            } else {
+                return "One of the image format is not Valid"
+            }
         }
     }
 
@@ -100,11 +126,26 @@ function ShopForm({ data, setData, index }) {
             </Grid>
             <Grid item sm={12}>
                 <Grid item sm={12}>
-                    <UploadFile
-                        name="shop_images"
-                        multiple
-                        onChange={handleShopImage}
-                        label="Shop Images"
+                    
+                    <Controller
+                        control={control}
+                        name={`shops[${index}].images`}
+                        rules={{
+                            validate: shopImageValidation
+                        }}
+                        render={({
+                            field: { value, name, ref, onChange },
+                        }) => (
+                            <UploadFile
+                                ref={ref}
+                                label="Shop Images"
+                                name={name}
+                                value={value}
+                                onChange={(e) => { onChange(e); handleShopImage(e) }}
+                                message={shopValidation("images")}
+                                multiple
+                            />
+                        )}
                     />
 
                     <p>First Image will be Thumbline</p>

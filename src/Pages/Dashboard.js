@@ -37,35 +37,43 @@ function Dashboard({ malls, updateMallData, deleteMallData }) {
 
     return (
         <>
-        {adminMode && <Nav />}
-        <Grid container spacing={2}
-            style={{ width: "90%", margin: "auto" }}
-        >
-            {!adminMode && <Grid item sm={12} style={{ textAlign: 'center' }}>
-                <TextField
-                    name="search"
-                    label="Search Mall..."
-                    variant="filled"
-                    style={{ width: "40%" }}
-                    onChange={searchMall}
-                />
-            </Grid>}
-            {adminMode && <Grid item sm={12}>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => history.push('/addMall')}
-                >
-                    Add Mall
+            {adminMode && <Nav />}
+            <Grid container spacing={2}
+                style={{ width: "90%", margin: "auto" }}
+            >
+                {!adminMode && <Grid item sm={12} style={{ textAlign: 'center' }}>
+                    <TextField
+                        name="search"
+                        label="Search Mall..."
+                        variant="filled"
+                        style={{ width: "40%" }}
+                        onChange={searchMall}
+                    />
+                </Grid>}
+                {adminMode && <Grid item sm={12}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => history.push('/addMall')}
+                    >
+                        Add Mall
                 </Button>
-            </Grid>}
-            <Grid item sm={12}>
-                <Malls malls={mallData} deleteMallData={deleteMallData} adminMode={adminMode}/>
-            </Grid>
-            <Grid item sm={12}>
-                <Shops shops={shops} malls={mallData} updateMallData={updateMallData} adminMode={adminMode}/>
-            </Grid>
-        </Grid >
+                </Grid>}
+                {
+                    malls.length > 0 ?
+                        <>
+                            <Grid item sm={12}>
+                                <Malls malls={mallData} deleteMallData={deleteMallData} adminMode={adminMode} />
+                            </Grid>
+                            <Grid item sm={12}>
+                                <Shops shops={shops} malls={mallData} updateMallData={updateMallData} adminMode={adminMode} />
+                            </Grid>
+                        </>
+                        :
+                        <h1>No Data Available</h1>
+                }
+
+            </Grid >
         </>
     )
 }

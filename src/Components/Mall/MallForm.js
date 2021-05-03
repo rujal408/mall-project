@@ -10,6 +10,7 @@ import { useHistory, useParams } from 'react-router';
 import { EDIT_MALL, LOCATION_CHANGE } from '../../redux/actionType'
 import { useForm, useFieldArray, FormProvider, Controller } from 'react-hook-form'
 
+const imageFormat = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
 function MallForm() {
 
@@ -17,13 +18,15 @@ function MallForm() {
         defaultValues: {
             mall_name: "",
             mall_address: "",
+            mall_image: '',
             shops: [{
                 shop_name: "",
-                shop_description: ""
+                shop_description: "",
+                images: []
             }]
         }
     })
-    const { handleSubmit, formState: { errors }, control, reset } = methods
+    const { handleSubmit, formState: { errors }, control, reset, clearErrors } = methods
 
     const { fields, append } = useFieldArray({
         control,
@@ -56,10 +59,11 @@ function MallForm() {
                 reset({
                     mall_name: mall.mall_name,
                     mall_address: mall.mall_name,
-                    id: mall.id,
+                    mall_image:'',
                     shops: mall.shops.map(shop => ({
                         shop_name: shop.shop_name,
-                        shop_description: shop.shop_description
+                        shop_description: shop.shop_description,
+                        images:[]
                     }))
                 })
                 setImageUrl(mall.mall_image.url)
@@ -71,6 +75,8 @@ function MallForm() {
         dispatch(getMallData())
         return () => dispatch({ type: LOCATION_CHANGE })
     }, [dispatch])
+
+
 
     const handleImage = (e) => {
         const file = e.target.files
@@ -92,11 +98,11 @@ function MallForm() {
 
 
     const submitData = async (datas) => {
-      
+
         const finalData = {
             ...datas,
             mall_image: data.mall_image,
-            shops: data.shops.map((shop, i) => ({ ...shop, ...datas.shops[i] }))
+            shops: data.shops.map((shop, i) => ({ ...shop, shop_name: datas.shops[i].shop_name, shop_description: datas.shops[i].shop_description }))
         }
 
 
@@ -123,7 +129,6 @@ function MallForm() {
             const datas = {
                 ...finalData, mall_image: mall_image[0], shops
             }
-            delete datas.id
             dispatch(updateMallData(id, datas))
         } else {
             const mall_image = await getFileUrl([finalData.mall_image])
@@ -145,12 +150,32 @@ function MallForm() {
     const addField = () => {
         append({
             shop_name: "",
-            shop_description: ""
+            shop_description: "",
+            images: []
         })
         setData(da => ({
             ...da,
             shops: [...da.shops, { shop_id: "" + Math.floor(Math.random() * Date.now()), images: [] }]
         }))
+    }
+
+
+    const mallImageValidation = () => {
+        if (!data.mall_image) {
+            return "Please Provide Mall Image"
+        } else {
+            if (data.mall_image.hasOwnProperty("url")) {
+                return true
+            } else {
+                if (!imageFormat.includes(data.mall_image.file.type)) {
+                    return "Provide Valid Image Format"
+                } else {
+                    clearErrors("mall_image")
+                    return true
+                }
+            }
+
+        }
     }
 
     return (
@@ -224,10 +249,24 @@ function MallForm() {
                         </Grid>
                         <Grid item sm={12}>
 
-                            <UploadFile
+                            <Controller
+                                control={control}
                                 name="mall_image"
-                                onChange={handleImage}
-                                label="Mall Image"
+                                rules={{
+                                    validate: mallImageValidation
+                                }}
+                                render={({
+                                    field: { value, name, ref, onChange },
+                                }) => (
+                                    <UploadFile
+                                        ref={ref}
+                                        label="Mall Image"
+                                        name={name}
+                                        value={value}
+                                        onChange={(e) => { onChange(e); handleImage(e) }}
+                                        message={errors?.mall_image?.message}
+                                    />
+                                )}
                             />
                             {imageUrl &&
                                 <Avatar

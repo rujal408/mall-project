@@ -1,12 +1,15 @@
 import React from 'react'
 
-function UploadFile({ onChange, name, label, ...rest }) {
+const UploadFile = React.forwardRef(({ name, label, message, onChange, ...rest }, ref) => {
     return (
         <div className="upload-btn-wrapper">
             <button className="btn">{label}</button>
-            <input type="file" name={name} {...rest} onChange={onChange} />
+            <input ref={ref} type="file" name={name} onChange={onChange} {...rest} />
+            <div style={{color:"red"}}>
+                {message}
+            </div>
         </div>
     )
-}
+})
 
 export default UploadFile

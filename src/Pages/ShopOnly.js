@@ -6,6 +6,8 @@ import ShopForm from '../Components/Shop/ShopForm'
 import { deleteFile, getFileUrl } from '../firebase/fireStorage'
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
 import { useHistory } from 'react-router'
+import { LOCATION_CHANGE } from '../redux/actionType'
+import { useDispatch } from 'react-redux'
 
 const defaultData = {
     shops: [{ shop_id: "" + Math.floor(Math.random() * Date.now()), images: [] }]
@@ -15,7 +17,7 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
 
     const methods = useForm({
         defaultValues: {
-            shops: [{ shop_name: "", shop_description: "" }]
+            shops: [{ shop_name: "", shop_description: "", images: [] }]
         }
     })
 
@@ -28,6 +30,7 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
 
     const { id, shop_id } = match.params
     const history = useHistory()
+    const dispatch = useDispatch()
     const [data, setData] = useState(defaultData)
     const [loading, setLoading] = useState(false)
 
@@ -38,18 +41,22 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
             if (shop) {
                 const { shop_id, shop_name, shop_description, images } = shop
                 reset({
-                    shops: [{ shop_name, shop_description }]
+                    shops: [{ shop_name, shop_description, images: [] }]
                 })
                 setData({ shops: [{ shop_id, images }] })
             }
         }
     }, [id, malls, shop_id, setEditMode, reset])
 
+    useEffect(() => {
+        return () => dispatch({type:LOCATION_CHANGE})
+    }, [dispatch])
+
     const onSubmit = async (datas) => {
         setLoading(true)
 
         const mainData = {
-            shops: data.shops.map((shop, i) => ({ ...shop, ...datas.shops[i] }))
+            shops: data.shops.map((shop, i) => ({ ...shop, shop_name: datas.shops[i].shop_name, shop_description: datas.shops[i].shop_description }))
         }
 
         const specificMall = malls.find(mall => mall.id === id)
@@ -86,14 +93,15 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
 
         updateMallData(id, finalData)
         setLoading(false)
-        history.push(`/${id}/shop/${shop_id}`)
+        history.push(`/${id}`)
 
     }
 
     const addField = () => {
         append({
             shop_name: "",
-            shop_description: ""
+            shop_description: "",
+            images: []
         })
         setData(da => ({
             shops: [...da.shops, { shop_id: "" + Math.floor(Math.random() * Date.now()), images: [] }]
@@ -124,13 +132,13 @@ function ShopOnly({ malls, editMode, updateMallData, setEditMode, match }) {
                                     ))
                                 }
                                 {!editMode && <Typography variant="h5" color="secondary">
-                                        <Fab
-                                            color="secondary"
-                                            style={{ height: 44, width: 44, margin: 12 }}>
-                                            <Add
-                                                onClick={addField}
-                                            />
-                                        </Fab>
+                                    <Fab
+                                        color="secondary"
+                                        style={{ height: 44, width: 44, margin: 12 }}>
+                                        <Add
+                                            onClick={addField}
+                                        />
+                                    </Fab>
                                 </Typography>}
                             </Grid>
                             <Grid item sm={12}>

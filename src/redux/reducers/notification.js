@@ -17,8 +17,7 @@ const notification = (state = initialState, action) => {
 
         case REMOVE_ALERT:
             return {
-                ...state,
-                show: false
+                show: false,
             }
         default: return state
     }
