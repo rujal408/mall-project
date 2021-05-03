@@ -133,6 +133,7 @@ function ShopForm({ data, setData, index }) {
                         rules={{
                             validate: shopImageValidation
                         }}
+                        defaultValue=""
                         render={({
                             field: { value, name, ref, onChange },
                         }) => (

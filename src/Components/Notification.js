@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 const Notification = ({ message, alertType, show }) => {
 
     return (
-        <div className={`alert-${alertType}`} style={show ?
+        <div className={`alert ${alertType}`} style={show ?
             { width: '300px', transition: '0.4s'} :
             { width: '0px', transition: '0.4s' }}>
             {message}

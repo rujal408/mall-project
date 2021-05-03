@@ -59,11 +59,11 @@ function MallForm() {
                 reset({
                     mall_name: mall.mall_name,
                     mall_address: mall.mall_name,
-                    mall_image:'',
+                    mall_image: '',
                     shops: mall.shops.map(shop => ({
                         shop_name: shop.shop_name,
                         shop_description: shop.shop_description,
-                        images:[]
+                        images: []
                     }))
                 })
                 setImageUrl(mall.mall_image.url)
@@ -158,7 +158,6 @@ function MallForm() {
             shops: [...da.shops, { shop_id: "" + Math.floor(Math.random() * Date.now()), images: [] }]
         }))
     }
-
 
     const mallImageValidation = () => {
         if (!data.mall_image) {

@@ -19,34 +19,23 @@ code {
   text-decoration: none;
 }
 
-.alert-success{
+.alert{
     display: block;
-    background: #28b5b5;
     padding: 12px 18px;
     margin: 0 auto;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
     margin-bottom: 20px;
-    box-shadow: rgba(0, 0, 0, 1.5) 1px 1px 2px 0.5px;
     position: absolute;
     float: right;
     right:10px;
     top:10px;
 }
 
-.alert-error{
-    display: block;
+.error{
     background: #ca111a;
-    padding: 12px 18px;
-    margin: 0 auto;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    margin-bottom: 20px;
-    box-shadow: rgba(0, 0, 0, 1.5) 1px 1px 2px 0.5px;
-    position: absolute;
-    float: right;
-    right:10px;
-    top:10px;
+}
+.success{
+  background: #28b5b5;
 }
