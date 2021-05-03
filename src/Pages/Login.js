@@ -48,7 +48,6 @@ function Login(props) {
                                             value: true,
                                             message: "Please Enter User Name"
                                         },
-
                                     }}
                                     defaultValue=""
                                     render={({
@@ -75,7 +74,6 @@ function Login(props) {
                                             value: true,
                                             message: "Please Enter Password"
                                         },
-
                                     }}
                                     defaultValue=""
                                     render={({
