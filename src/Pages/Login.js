@@ -4,16 +4,22 @@ import { connect } from 'react-redux'
 import { useHistory } from 'react-router'
 import { login } from '../redux/actions/user'
 import { LOGIN_SUCCESS } from '../redux/actionType'
-
+import { useForm, Controller } from 'react-hook-form'
 
 function Login(props) {
 
+    const { control, formState: { errors }, handleSubmit } = useForm({
+        defaultValues: {
+            username: '',
+            password: ''
+        }
+    })
     const history = useHistory()
-    const submitData = async (e) => {
-        e.preventDefault()
-        const target = e.target
-        const username = target.username.value
-        const password = target.password.value
+
+    const submitData = async (data) => {
+
+        const { username, password } = data
+
         let validation = await props.login({ username, password })
         if (validation) {
             localStorage.setItem("user_token", "fjsldfjslfd09sdf80sdf")
@@ -32,21 +38,60 @@ function Login(props) {
                         Login
                     </Typography>
                     <CardContent style={{ background: "#95a5a6" }}>
-                        <form className="login-fields" onSubmit={submitData}>
+                        <form className="login-fields" onSubmit={handleSubmit(submitData)}>
                             <div className="form-control">
-                                <TextField
+                                <Controller
+                                    control={control}
                                     name="username"
-                                    label="Enter Username"
-                                    inputProps={{ valid: ["required", /^\w*$/] }}
+                                    rules={{
+                                        required: {
+                                            value: true,
+                                            message: "Please Enter User Name"
+                                        },
+
+                                    }}
+                                    defaultValue=""
+                                    render={({
+                                        field: { value, name, ref, onChange },
+                                    }) => (
+                                        <TextField
+                                            onChange={onChange}
+                                            label="Enter Username"
+                                            inputRef={ref}
+                                            name={name}
+                                            value={value}
+                                            error={errors?.username && true}
+                                            helperText={errors?.username?.message}
+                                        />
+                                    )}
                                 />
                             </div>
                             <div className="form-control">
-                                <TextField
+                                <Controller
+                                    control={control}
                                     name="password"
-                                    type="password"
-                                    label="Enter Password"
-                                    fullWidth
-                                    inputProps={{ valid: ["required", /^\w*$/] }}
+                                    rules={{
+                                        required: {
+                                            value: true,
+                                            message: "Please Enter Password"
+                                        },
+
+                                    }}
+                                    defaultValue=""
+                                    render={({
+                                        field: { value, name, ref, onChange },
+                                    }) => (
+                                        <TextField
+                                            onChange={onChange}
+                                            label="Enter Password"
+                                            inputRef={ref}
+                                            name={name}
+                                            type="password"
+                                            value={value}
+                                            error={errors?.password && true}
+                                            helperText={errors?.password?.message}
+                                        />
+                                    )}
                                 />
                             </div>
                             <div className="form-control">
