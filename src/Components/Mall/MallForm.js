@@ -58,7 +58,7 @@ function MallForm() {
                 )
                 reset({
                     mall_name: mall.mall_name,
-                    mall_address: mall.mall_name,
+                    mall_address: mall.mall_address,
                     mall_image: '',
                     shops: mall.shops.map(shop => ({
                         shop_name: shop.shop_name,
@@ -75,7 +75,6 @@ function MallForm() {
         dispatch(getMallData())
         return () => dispatch({ type: LOCATION_CHANGE })
     }, [dispatch])
-
 
 
     const handleImage = (e) => {
