@@ -7,7 +7,7 @@ import { shuffle } from '../utils/Shuffle'
 import HOC from '../Components/HOC'
 import Nav from '../Components/Nav'
 
-function Dashboard({ malls, updateMallData, deleteMallData }) {
+function Dashboard({ malls, updateMallData, deleteMallData, loading }) {
 
     const history = useHistory()
     const location = useLocation()
@@ -35,6 +35,7 @@ function Dashboard({ malls, updateMallData, deleteMallData }) {
 
     const adminMode = location.pathname.includes('dashboard')
 
+
     return (
         <>
             {adminMode && <Nav />}
@@ -60,18 +61,24 @@ function Dashboard({ malls, updateMallData, deleteMallData }) {
                 </Button>
                 </Grid>}
                 {
-                    malls.length > 0 ?
+                    loading ? <div>Loading.... </div> :
                         <>
-                            <Grid item sm={12}>
-                                <Malls malls={mallData} deleteMallData={deleteMallData} adminMode={adminMode} />
-                            </Grid>
-                            <Grid item sm={12}>
-                                <Shops shops={shops} malls={mallData} updateMallData={updateMallData} adminMode={adminMode} />
-                            </Grid>
+                            {
+                                malls.length > 0 ?
+                                    <>
+                                        <Grid item sm={12}>
+                                            <Malls malls={mallData} deleteMallData={deleteMallData} adminMode={adminMode} />
+                                        </Grid>
+                                        <Grid item sm={12}>
+                                            <Shops shops={shops} malls={mallData} updateMallData={updateMallData} adminMode={adminMode} />
+                                        </Grid>
+                                    </>
+                                    :
+                                    <h1>No Data Available</h1>
+                            }
                         </>
-                        :
-                        <h1>No Data Available</h1>
                 }
+
 
             </Grid >
         </>
