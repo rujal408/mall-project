@@ -5,7 +5,7 @@ const UploadFile = React.forwardRef(({ name, label, message, onChange, ...rest }
         <div className="upload-btn-wrapper">
             <button className="btn">{label}</button>
             <input ref={ref} type="file" name={name} onChange={onChange} {...rest} />
-            <div style={{color:"red"}}>
+            <div style={{ color: "red" }}>
                 {message}
             </div>
         </div>

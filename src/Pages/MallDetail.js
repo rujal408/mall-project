@@ -21,7 +21,7 @@ function MallDetail({ malls, updateMallData, match }) {
         }
     }, [id, malls])
 
-    const runPaginate = async (number) => setPage(number)
+    const runPaginate = (number) => setPage(number)
 
     const handleShopDelete = async (shop_id) => {
         const data = await deleteShop(malls, id, shop_id)
@@ -32,10 +32,10 @@ function MallDetail({ malls, updateMallData, match }) {
 
     const adminMode = !match.path.includes("user")
 
-    const locationChange=(shopId)=>{
-        if(!adminMode){
+    const locationChange = (shopId) => {
+        if (!adminMode) {
             history.push(`/${id}/shop/${shopId}/user`)
-        }else{
+        } else {
             history.push(`/${id}/shop/${shopId}`)
         }
     }
@@ -82,7 +82,7 @@ function MallDetail({ malls, updateMallData, match }) {
                                                 name={shop.shop_name}
                                                 description={detail.mall_name}
                                                 url={shop.images[0].url}
-                                                handleClick={()=>locationChange(shop.shop_id)}
+                                                handleClick={() => locationChange(shop.shop_id)}
                                                 crossClick={() => handleShopDelete(shop.shop_id)}
                                                 adminMode={adminMode}
                                             />

@@ -13,7 +13,7 @@ const HOC = (OriginalComponent) => {
         const user_token = useSelector(state => state.userReducer.user_token)
 
         React.useEffect(() => {
-             dispatch(getMallData())
+            dispatch(getMallData())
         }, [dispatch])
 
 
