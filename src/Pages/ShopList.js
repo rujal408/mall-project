@@ -20,8 +20,6 @@ function ShopList({ malls, updateMallData, match }) {
         setSearch(value)
     }
 
-    const runPaginate = (number) => setPage(number)
-
     const handleShopDelete = async (mallId, shopName) => {
         const data = await deleteShop(malls, mallId, shopName)
         if (data) {
@@ -29,60 +27,60 @@ function ShopList({ malls, updateMallData, match }) {
         }
     }
 
-    const filteredShops = shops.filter(x => search === "" ? x
-        :
-        x.shop_name.toLowerCase().includes(search.toLowerCase()))
+        const filteredShops = shops.filter(shop => search === "" ? shop
+            :
+            shop.shop_name.toLowerCase().includes(search.toLowerCase()))
 
-    const adminMode = !match.path.includes("user")
+        const adminMode = !match.path.includes("user")
 
-    return (
+        return (
 
-        <Grid container spacing={2} style={{ width: "90%", margin: "auto" }}>
-            <Grid item sm={12} md={12} style={{ textAlign: 'center' }}>
-                <TextField
-                    name="search"
-                    label="Search"
-                    variant="filled"
-                    onChange={handleChange}
-                    style={{ width: "35%" }}
-                />
-            </Grid>
-
-            <Grid container spacing={2}>
-                <Grid item sm={12}>
-                    <Typography variant="h4" color="secondary">Shops</Typography>
-                </Grid>
-                {
-                    paginate(filteredShops, postPerPage, currentPage)
-                        .map(shop => (
-                            <Grid item sm={4} xs={12} key={shop.shop_id}>
-                                <Card
-                                    name={shop.shop_name}
-                                    url={shop.images[0].url}
-                                    description={shop.mall_name}
-                                    handleClick={() => history.push('/' + shop.id + '/shop/' + shop.shop_id)}
-                                    crossClick={() => handleShopDelete(shop.id, shop.shop_id)}
-                                    adminMode={adminMode}
-                                />
-                            </Grid>
-                        ))
-                }
-            </Grid>
-            <Grid container spacing={2}>
-                <Grid item sm={12}>
-                    <Pagination
-                        postPerPage={postPerPage}
-                        totalPosts={shops.length}
-                        paginate={runPaginate}
-                        setPostPerPage={(e) => { setPostPerPage(+e.target.value); setPage(1) }}
+            <Grid container spacing={2} style={{ width: "90%", margin: "auto" }}>
+                <Grid item sm={12} md={12} style={{ textAlign: 'center' }}>
+                    <TextField
+                        name="search"
+                        label="Search"
+                        variant="filled"
+                        onChange={handleChange}
+                        style={{ width: "35%" }}
                     />
                 </Grid>
+
+                <Grid container spacing={2}>
+                    <Grid item sm={12}>
+                        <Typography variant="h4" color="secondary">Shops</Typography>
+                    </Grid>
+                    {
+                        paginate(filteredShops, postPerPage, currentPage)
+                            .map(shop => (
+                                <Grid item sm={4} xs={12} key={shop.shop_id}>
+                                    <Card
+                                        name={shop.shop_name}
+                                        url={shop.images[0].url}
+                                        description={shop.mall_name}
+                                        handleClick={() => history.push('/' + shop.id + '/shop/' + shop.shop_id)}
+                                        crossClick={() => handleShopDelete(shop.id, shop.shop_id)}
+                                        adminMode={adminMode}
+                                    />
+                                </Grid>
+                            ))
+                    }
+                </Grid>
+                <Grid container spacing={2}>
+                    <Grid item sm={12}>
+                        <Pagination
+                            postPerPage={postPerPage}
+                            totalPosts={shops.length}
+                            paginate={(number) => setPage(number)}
+                            setPostPerPage={(e) => { setPostPerPage(+e.target.value); setPage(1) }}
+                        />
+                    </Grid>
+                </Grid>
             </Grid>
-        </Grid>
 
 
-    )
-}
+        )
+    }
 
 
-export default HOC(ShopList)
+    export default HOC(ShopList)

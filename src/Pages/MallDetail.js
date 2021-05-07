@@ -16,7 +16,7 @@ function MallDetail({ malls, updateMallData, match }) {
 
     React.useEffect(() => {
         if (id) {
-            const mallDetail = malls.find(x => x.id === id)
+            const mallDetail = malls.find(mall => mall.id === id)
             mallDetail && setDetail(mallDetail)
         }
     }, [id, malls])

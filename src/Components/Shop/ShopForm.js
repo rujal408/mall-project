@@ -8,9 +8,15 @@ const imageFormat = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
 function ShopForm({ data, setData, index }) {
 
-    const { formState: { errors }, control, getValues, clearErrors } = useFormContext()
+    const { formState: { errors }, control, getValues, clearErrors, setValue } = useFormContext()
 
-    const removeFile = async (id) => {
+    React.useEffect(() => {
+        if (data.images.length === 0) {
+            setValue(`shops[${index}].images`, '')
+        }
+    }, [data, index, setValue])
+
+    const removeFile = (id) => {
 
         const fileList = data.images.filter(file => file.id !== id)
         setData(th => ({
@@ -20,7 +26,9 @@ function ShopForm({ data, setData, index }) {
     }
 
     const handleShopImage = (e) => {
-        const imageData = Object.entries(e.target.files).map(([key, value]) => ({ id: key + Math.random() + value.name, image_name: value.name, file: value }))
+        const imageData = Object.entries(e.target.files).map(([key, value]) => (
+            { id: key + Math.random() + value.name, image_name: value.name, file: value }
+        ))
         setData(th => ({
             ...th,
             shops: th.shops.map((x, i) => (index === i ? { ...x, images: [...x.images, ...imageData] } : x))
@@ -39,11 +47,8 @@ function ShopForm({ data, setData, index }) {
         }
     }
 
-    const shopImageValidation = () => {
-
-        if (data.images.length === 0) {
-            return "Please Provide Shop Image"
-        } else {
+    const shopImageValidation = (value) => {
+        if (data.images.length > 0 || value?.length > 0) {
             if (data.images.every(im => {
                 if (im.hasOwnProperty("url")) {
                     return true
@@ -60,6 +65,8 @@ function ShopForm({ data, setData, index }) {
             } else {
                 return "One of the image format is not Valid"
             }
+        } else {
+            return "Please Provide Shop Image"
         }
     }
 
@@ -126,7 +133,7 @@ function ShopForm({ data, setData, index }) {
             </Grid>
             <Grid item sm={12}>
                 <Grid item sm={12}>
-                    
+
                     <Controller
                         control={control}
                         name={`shops[${index}].images`}

@@ -6,7 +6,7 @@ import Card from '../Components/Card'
 import HOC from '../Components/HOC'
 
 function MallList({ malls, deleteMallData, match }) {
-    
+
     const history = useHistory()
     const [search, setSearch] = React.useState('')
     const [currentPage, setPage] = React.useState(1)
@@ -18,12 +18,11 @@ function MallList({ malls, deleteMallData, match }) {
         setSearch(value)
     }
 
-    const runPaginate = (number) => setPage(number)
 
-    const filteredMalls = malls.filter(x => search === "" ? x
+    const filteredMalls = malls.filter(mall => search === "" ? mall
         :
-        x.mall_name.toLowerCase().includes(search.toLowerCase()))
-    
+        mall.mall_name.toLowerCase().includes(search.toLowerCase()))
+
 
     const adminMode = !match.path.includes("user")
 
@@ -84,7 +83,7 @@ function MallList({ malls, deleteMallData, match }) {
                     <Pagination
                         postPerPage={postPerPage}
                         totalPosts={malls.length}
-                        paginate={runPaginate}
+                        paginate={(number) => setPage(number)}
                         setPostPerPage={(e) => { setPostPerPage(+e.target.value); setPage(1) }}
                     />
                 </Grid>
